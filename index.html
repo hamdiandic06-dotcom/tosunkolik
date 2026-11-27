@@ -919,6 +919,7 @@
       const sl = PRIORITY_LEAGUES[0];
       const ucl = PRIORITY_LEAGUES[2];
       const epl = PRIORITY_LEAGUES[5];
+      const laliga = PRIORITY_LEAGUES[6];
       return [
         {
           league: sl,
@@ -986,6 +987,23 @@
               home: { id: '359', name: 'Arsenal', fullName: 'Arsenal', logo: 'https://a.espncdn.com/i/teamlogos/soccer/500/359.png', score: '2' },
               away: { id: '364', name: 'Liverpool', fullName: 'Liverpool', logo: 'https://a.espncdn.com/i/teamlogos/soccer/500/364.png', score: '2' },
               htScore: '2 - 1',
+              events: []
+            }
+          ]
+        },
+        {
+          league: laliga,
+          matches: [
+            {
+              id: 'bar-atm-401',
+              league: laliga,
+              date: new Date().toISOString(),
+              statusCategory: 'upcoming',
+              statusLabel: '23:00',
+              venue: 'Estadi Olímpic',
+              home: { id: '83', name: 'Barcelona', fullName: 'FC Barcelona', logo: 'https://a.espncdn.com/i/teamlogos/soccer/500/83.png', score: '-' },
+              away: { id: '1068', name: 'Atlético Madrid', fullName: 'Atlético de Madrid', logo: 'https://a.espncdn.com/i/teamlogos/soccer/500/1068.png', score: '-' },
+              htScore: null,
               events: []
             }
           ]
