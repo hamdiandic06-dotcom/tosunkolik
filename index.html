@@ -1390,11 +1390,35 @@
           }
         });
 
-        const results = await Promise.all(requests);
+        let results = await Promise.all(requests);
 
-        const nonEmptyLeagues = results
+        let nonEmptyLeagues = results
           .filter(group => group.matches.length > 0)
           .sort((a, b) => a.league.rank - b.league.rank);
+
+        // Eğer sistem tarihi farklıysa veya seçili günde hiç maç dönmediyse (Bugün sekmesinde),
+        // tarih filtresi olmadan en güncel canlı/günlük fikstürü otomatik çek
+        if (nonEmptyLeagues.length === 0 && state.dateOffset === 0) {
+          const fallbackRequests = PRIORITY_LEAGUES.map(async (league) => {
+            try {
+              const latestUrl = `https://site.api.espn.com/apis/site/v2/sports/soccer/${league.slug}/scoreboard`;
+              const res = await fetch(latestUrl);
+              if (!res.ok) return { league, matches: [] };
+              const data = await res.json();
+              const events = Array.isArray(data.events) ? data.events : [];
+              const matches = events
+                .map(ev => normalizeMatchEvent(ev, league))
+                .filter(Boolean);
+              return { league, matches };
+            } catch (e) {
+              return { league, matches: [] };
+            }
+          });
+          const fallbackResults = await Promise.all(fallbackRequests);
+          nonEmptyLeagues = fallbackResults
+            .filter(group => group.matches.length > 0)
+            .sort((a, b) => a.league.rank - b.league.rank);
+        }
 
         if (nonEmptyLeagues.length === 0 && failedCount === PRIORITY_LEAGUES.length) {
           if (statusBanner && statusBannerText) {
